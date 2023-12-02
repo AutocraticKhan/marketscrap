@@ -1,0 +1,10 @@
+version: '3'
+services:
+  web:
+    build: .
+    volumes:
+      - .:/app
+  selenium-chrome:
+    image: selenium/standalone-chrome
+    volumes:
+      - /dev/shm:/dev/shm
