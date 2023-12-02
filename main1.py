@@ -9,6 +9,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.chrome.options import Options
 import yaml
+import ssl
 import smtplib
 from email.message import EmailMessage
 from email.mime.multipart import MIMEMultipart
@@ -33,6 +34,19 @@ def first_link(soup, website):
         except:
             continue
     return _link
+
+def telegram_bot(requests,pic_url,http_api,chat_id,message):
+    response = requests.get(pic_url)
+    img = response.content
+
+    # Prepare the file for sending
+    file = {'photo': ('image.webp', img)}
+
+    # Send the POST request
+    to_url = f'https://api.telegram.org/bot{http_api}/sendPhoto?chat_id={chat_id}&caption={message}'
+    requests.post(to_url, files=file)
+    print('Telegram sent')
+
 
 def get_criteria(criteria, row):
     id_ = criteria.iloc[row, 0]
