@@ -136,12 +136,16 @@ while True:
         main_url = f'https://{website}/l/auto-s/{brand}/{model}#PriceCentsFrom:{price_from}00|PriceCentsTo:{price_to}00|constructionYearFrom:{year_from}|constructionYearTo:{year_to}|sortBy:SORT_INDEX|sortOrder:DECREASING'
         # print(main_url)
 
-        options  = random_proxy(proxies_df)
-        print(options)
+        # options  = random_proxy(proxies_df)
+        # print(options)
 
-        driver = webdriver.Edge(seleniumwire_options=options)
-
-        driver = webdriver.Edge()
+        # driver = webdriver.Edge(seleniumwire_options=options)
+        options = Options()
+        options.add_argument('--headless')
+        options.add_argument('--no-sandbox')
+        options.add_argument('--disable-dev-shm-usage')
+        # driver = webdriver.Chrome(options=options)
+        driver = webdriver.Edge(options=options)
         
         main_page_soup = html_soup(driver,main_url)
         
