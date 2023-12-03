@@ -101,8 +101,8 @@ while True:
         id_, website, brand, model, price_from, price_to, year_from, year_to = get_criteria(criteria, row)
         main_url = f'https://{website}/l/auto-s/{brand}/{model}#PriceCentsFrom:{price_from}00|PriceCentsTo:{price_to}00|constructionYearFrom:{year_from}|constructionYearTo:{year_to}|sortBy:SORT_INDEX|sortOrder:DECREASING'
         
-        # driver = webdriver.Chrome(options=chrome_options)
-        driver = webdriver.Remote("http://localhost:4444", options=webdriver.ChromeOptions())
+        driver = webdriver.Chrome(options=chrome_options)
+        # driver = webdriver.Remote("http://localhost:4444", options=webdriver.ChromeOptions())
         main_page_soup = html_soup(driver, main_url)
         link_to_open = first_link(main_page_soup, website)
         print('first scrap done')
