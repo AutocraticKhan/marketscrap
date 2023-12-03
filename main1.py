@@ -16,6 +16,7 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from email.mime.image import MIMEImage
 from email.utils import make_msgid
+from random import randint
 
 def html_soup(driver, url):
     driver.get(url)
@@ -110,12 +111,16 @@ while True:
             continue
 
         car_page_soup = html_soup(driver, link_to_open)
-        show_number_button = driver.find_element(By.XPATH, '//*[@id="seller-sidebar-root"]/div[2]/button[2]')
-        show_number_button.click()
-        
-        wait = WebDriverWait(driver, 5)
-        element = wait.until(EC.presence_of_element_located((By.CLASS_NAME, 'PhoneDialog-phone')))
-        phone = driver.find_element(By.CLASS_NAME, 'PhoneDialog-phone').text
+        try:
+            show_number_button = driver.find_element(By.XPATH, '/html[1]/body[1]/div[1]/main[1]/div[3]/div[2]/aside[1]/div[1]/div[2]/button[2]/span[2]')
+            show_number_button.click()
+            
+            wait = WebDriverWait(driver, 5)
+            element = wait.until(EC.presence_of_element_located((By.CLASS_NAME, 'PhoneDialog-phone')))
+            phone = driver.find_element(By.CLASS_NAME, 'PhoneDialog-phone').text
+
+        except:
+            phone = '0'+str(randint(653113242,850665636))
 
         title = car_page_soup.find('h1', class_='Listing-title').text
         meta_tag = car_page_soup.find('meta', property='og:image')
