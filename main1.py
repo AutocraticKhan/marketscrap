@@ -96,7 +96,7 @@ chrome_options.add_argument('--disable-extensions')
 
 while True:
     print('Starting new Session')
-    time.sleep(data['wait'])
+    
     print('script started')
     for row in range(criteria.shape[0]):
         id_, website, brand, model, price_from, price_to, year_from, year_to = get_criteria(criteria, row)
@@ -176,4 +176,6 @@ while True:
             message = f'{title}\nPrice: {price}\nName: {name}\nPhone: {phone}\nAddress: {address}\nDescription: {descrip}\nLink to post: {link_to_open}'
 
             telegram_bot(requests, img_link, http_api, chat_id, message)
+
+    time.sleep(data['wait'])
             
