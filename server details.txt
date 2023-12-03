@@ -1,0 +1,4 @@
+38.242.245.178:53579 
+user autoradar
+pass autoradar
+
