@@ -6,8 +6,8 @@ from time import sleep
 
 sleep(5)
 
-# browser = webdriver.Remote("http://localhost:4444", options=webdriver.ChromeOptions())
-browser = webdriver.Remote("http://selenium:4444/wd/hub", DesiredCapabilities.CHROME)
+browser = webdriver.Remote("http://localhost:4444", options=webdriver.ChromeOptions())
+# browser = webdriver.Remote("http://selenium:4444/wd/hub", DesiredCapabilities.CHROME)
 
 try:
     browser.get("https://medium.com")

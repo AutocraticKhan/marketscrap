@@ -1,13 +1,13 @@
   version: "3"
   services:
-    web:
-      build: .
-      volumes:
-        - .:/app
-      depends_on:
-        - selenium
-      environment:
-        - SELENIUM_HOST=selenium-chrome
+    # web:
+    #   build: .
+    #   volumes:
+    #     - .:/app
+    #   depends_on:
+    #     - selenium
+    #   environment:
+    #     - SELENIUM_HOST=selenium-chrome
     selenium:
       image: selenium/standalone-chrome:latest
       ports:
