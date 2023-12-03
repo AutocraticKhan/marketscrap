@@ -46,7 +46,7 @@ def telegram_bot(requests,pic_url,http_api,chat_id,message):
     # Send the POST request
     to_url = f'https://api.telegram.org/bot{http_api}/sendPhoto?chat_id={chat_id}&caption={message}'
     requests.post(to_url, files=file)
-    print('Telegram sent')
+    print(f'Telegram sent to-- {chat_id}')
 
 
 def get_criteria(criteria, row):
@@ -68,11 +68,11 @@ def check_link_in_json(link_to_open, json_file_path, driver):
 
     if link_to_check in data["links"]:
         sta = 'yes'
-        print("Yes")
+        print("data alread sent -- ignoring")
         driver.quit()
     else:
         sta = 'no'
-        print("No")
+        print("new data found sending info")
         data["links"].append(link_to_check)
 
         with open(json_file_path, 'w') as file:
@@ -95,6 +95,7 @@ chrome_options.add_argument('--disable-software-rasterizer')
 chrome_options.add_argument('--disable-extensions')
 
 while True:
+    print('Starting new Session')
     time.sleep(data['wait'])
     print('script started')
     for row in range(criteria.shape[0]):
@@ -170,7 +171,7 @@ while True:
                 smtp.login(email_sender, email_password)
                 smtp.sendmail(email_sender, email_receiver, em.as_string())
 
-            print('Email sent')
+            print(f'Email sent to -- {email_receiver}')
 
             message = f'{title}\nPrice: {price}\nName: {name}\nPhone: {phone}\nAddress: {address}\nDescription: {descrip}\nLink to post: {link_to_open}'
 
