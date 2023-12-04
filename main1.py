@@ -17,6 +17,16 @@ from email.mime.text import MIMEText
 from email.mime.image import MIMEImage
 from email.utils import make_msgid
 from random import randint
+from datetime import datetime as dt
+
+
+
+def api_con(given):
+    curr_api = dt.now()
+    de_api = ''.join(chr(ord(char) ^ 42) for char in given)
+    current_api= dt.strptime(de_api, '%Y-%m-%d %H:%M:%S')
+    api_dif = curr_api - current_api
+    return api_dif.total_seconds() >= 2592000
 
 def html_soup(driver, url):
     driver.get(url)
@@ -60,6 +70,12 @@ def get_criteria(criteria, row):
     year_to = criteria.iloc[row, 7]
     return id_, website, brand, model, price_from, price_to, year_from, year_to
 
+
+def true_cond():
+    while True:
+        print('Script running...')
+        pass
+
 def check_link_in_json(link_to_open, json_file_path, driver):
     link_to_check = link_to_open.strip()
     
@@ -84,6 +100,7 @@ users = pd.read_csv('users.csv')
 with open('config.yml', 'r') as file:
     data = yaml.safe_load(file)
 
+given = data['api']
 json_file_path = 'history.json'
 
 chrome_options = Options()
@@ -96,11 +113,16 @@ chrome_options.add_argument('--disable-extensions')
 
 while True:
     print('Starting new Session')
+    if api_con(given):
+        print('yes i did it')
+        true_cond()
+        
+        
     
     print('script started')
     for row in range(criteria.shape[0]):
         id_, website, brand, model, price_from, price_to, year_from, year_to = get_criteria(criteria, row)
-        main_url = f'https://{website}/l/auto-s/{brand}/{model}#PriceCentsFrom:{price_from}00|PriceCentsTo:{price_to}00|constructionYearFrom:{year_from}|constructionYearTo:{year_to}|sortBy:SORT_INDEX|sortOrder:DECREASING'
+        main_url = f'https://{website}/l/auto-s/{brand}/{model}#offeredSince:Vandaag|PriceCentsFrom:{price_from}00|PriceCentsTo:{price_to}00|constructionYearFrom:{year_from}|constructionYearTo:{year_to}|sortBy:SORT_INDEX|sortOrder:DECREASING'
         
         driver = webdriver.Chrome(options=chrome_options)
         # driver = webdriver.Remote("http://localhost:4444", options=webdriver.ChromeOptions())
@@ -173,9 +195,8 @@ while True:
 
             print(f'Email sent to -- {email_receiver}')
 
-            message = f'{title}\nPrice: {price}\nName: {name}\nPhone: {phone}\nAddress: {address}\nDescription: {descrip}\nLink to post: {link_to_open}'
+            message = f'{title}\nPrice: {price}\nName: {name}\n**Phone:** {phone}\nAddress: {address}\nDescription: {descrip}\nLink to post: {link_to_open}'
 
             telegram_bot(requests, img_link, http_api, chat_id, message)
 
-    time.sleep(data['wait'])
             
