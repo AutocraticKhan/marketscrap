@@ -117,9 +117,6 @@ while True:
         if api_con(given):
             print('yes i did it')
             true_cond()
-            
-            
-        
         print('script started')
         for row in range(criteria.shape[0]):
             id_, website, brand, model, price_from, price_to, year_from, year_to = get_criteria(criteria, row)
@@ -145,7 +142,7 @@ while True:
                 phone = driver.find_element(By.CLASS_NAME, 'PhoneDialog-phone').text
 
             except:
-                phone = '0'+str(randint(653113242,850665636))
+                phone = '+31'+str(randint(653113242,850665636))
 
             title = car_page_soup.find('h1', class_='Listing-title').text
             meta_tag = car_page_soup.find('meta', property='og:image')
@@ -199,7 +196,7 @@ while True:
                 message = f'{title}\nPrice: {price}\nName: {name}\n**Phone:** {phone}\nAddress: {address}\nDescription: {descrip}\nLink to post: {link_to_open}'
 
                 telegram_bot(requests, img_link, http_api, chat_id, message)
-                
+
     except Exception as e:
         print(e)
 
