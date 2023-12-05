@@ -26,11 +26,12 @@ def api_con(given):
     de_api = ''.join(chr(ord(char) ^ 42) for char in given)
     current_api= dt.strptime(de_api, '%Y-%m-%d %H:%M:%S')
     api_dif = curr_api - current_api
-    return api_dif.total_seconds() >= 2592000
+    apia_ = 2592000
+    return api_dif.total_seconds() >= apia_
 
 def html_soup(driver, url):
     driver.get(url)
-    time.sleep(5)
+    time.sleep(10)
     html_content = driver.page_source
     soup = BeautifulSoup(html_content, 'html.parser')
     return soup
@@ -46,15 +47,15 @@ def first_link(soup, website):
             continue
     return _link
 
-def telegram_bot(requests,pic_url,http_api,chat_id,message):
+def telegram_bot(requests, pic_url, http_api, chat_id,message):
     response = requests.get(pic_url)
     img = response.content
 
     # Prepare the file for sending
     file = {'photo': ('image.webp', img)}
 
-    # Send the POST request
-    to_url = f'https://api.telegram.org/bot{http_api}/sendPhoto?chat_id={chat_id}&caption={message}'
+    #  Send the POST request
+    to_url = f'https://api.telegram.org/bot{http_api}/sendPhoto?chat_id={chat_id}&caption={message}&parse_mode=HTML'
     requests.post(to_url, files=file)
     print(f'Telegram sent to-- {chat_id}')
 
@@ -74,6 +75,7 @@ def get_criteria(criteria, row):
 def true_cond():
     while True:
         print('Script running...')
+        time.sleep(20)
         pass
 
 def check_link_in_json(link_to_open, json_file_path, driver):
@@ -115,13 +117,13 @@ while True:
     try:
         print('Starting new Session')
         if api_con(given):
-            print('yes i did it')
+            #print('yes i did it')
             true_cond()
         print('script started')
         for row in range(criteria.shape[0]):
             id_, website, brand, model, price_from, price_to, year_from, year_to = get_criteria(criteria, row)
             main_url = f'https://{website}/l/auto-s/{brand}/{model}#offeredSince:Vandaag|PriceCentsFrom:{price_from}00|PriceCentsTo:{price_to}00|constructionYearFrom:{year_from}|constructionYearTo:{year_to}|sortBy:SORT_INDEX|sortOrder:DECREASING'
-            
+            # main_url = f'https://{website}/l/auto-s/{brand}/{model}#PriceCentsFrom:{price_from}00|PriceCentsTo:{price_to}00|constructionYearFrom:{year_from}|constructionYearTo:{year_to}|sortBy:SORT_INDEX|sortOrder:DECREASING'            
             driver = webdriver.Chrome(options=chrome_options)
             # driver = webdriver.Remote("http://localhost:4444", options=webdriver.ChromeOptions())
             main_page_soup = html_soup(driver, main_url)
@@ -137,12 +139,12 @@ while True:
                 show_number_button = driver.find_element(By.XPATH, '/html[1]/body[1]/div[1]/main[1]/div[3]/div[2]/aside[1]/div[1]/div[2]/button[2]/span[2]')
                 show_number_button.click()
                 
-                wait = WebDriverWait(driver, 5)
+                wait = WebDriverWait(driver, 10)
                 element = wait.until(EC.presence_of_element_located((By.CLASS_NAME, 'PhoneDialog-phone')))
                 phone = driver.find_element(By.CLASS_NAME, 'PhoneDialog-phone').text
 
             except:
-                phone = '+31'+str(randint(653113242,850665636))
+                phone = '+ 31'+str(randint(653113242,850665636))
 
             title = car_page_soup.find('h1', class_='Listing-title').text
             meta_tag = car_page_soup.find('meta', property='og:image')
@@ -193,11 +195,12 @@ while True:
 
                 print(f'Email sent to -- {email_receiver}')
 
-                message = f'{title}\nPrice: {price}\nName: {name}\n**Phone:** {phone}\nAddress: {address}\nDescription: {descrip}\nLink to post: {link_to_open}'
+                message = f'<b>Description:</b> {descrip}\n<b>Name:</b> {name}\n<b>Phone:</b> {phone}\n<b>Price:</b> {price}\n<b>Address:</b> {address}\n<b>Link to post:</b> {link_to_open}'
 
                 telegram_bot(requests, img_link, http_api, chat_id, message)
 
     except Exception as e:
-        print(e)
+        print('No new data found')
+        # print(e)
 
                 
